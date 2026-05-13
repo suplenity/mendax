@@ -1,0 +1,35 @@
+{
+  "name": "mendax",
+  "version": "1.1.0",
+  "description": "Discord Quest Completer",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --x64",
+    "build:dir": "electron-builder --win --x64 --dir"
+  },
+  "build": {
+    "appId": "com.mendax.app",
+    "productName": "Mendax",
+    "win": {
+      "target": "portable",
+      "icon": "mendax.ico"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**",
+      "src/**",
+      "node_modules/**",
+      "package.json"
+    ],
+    "asar": true
+  },
+  "dependencies": {
+    "ws": "^8.17.0"
+  },
+  "devDependencies": {
+    "electron": "^41.4.0",
+    "electron-builder": "^26.8.1"
+  }
+}

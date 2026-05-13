@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="blue">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>Mendax</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── Titlebar ─────────────────────────────────────────────────────────────── -->
+<div id="titlebar">
+  <div class="brand-wrap">
+    <span class="brand">Mendax</span>
+    <span class="brand-sub" id="brand-sub"></span>
+  </div>
+  <div class="controls">
+    <button class="ctrl-btn theme-btn" id="btn-theme" title="Change theme">
+      <span class="theme-dot"></span>
+    </button>
+    <button class="ctrl-btn tray"    id="btn-tray"    title="Send to tray">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="6" y1="1" x2="6" y2="8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        <polyline points="3,5.5 6,8.5 9,5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <line x1="1.5" y1="10.5" x2="10.5" y2="10.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <button class="ctrl-btn minimize" id="btn-minimize" title="Minimize">&#8211;</button>
+    <button class="ctrl-btn close"    id="btn-close"    title="Quit">&#215;</button>
+  </div>
+</div>
+
+<!-- ── Theme Panel (dropdown) ───────────────────────────────────────────────── -->
+<div class="theme-panel" id="theme-panel">
+  <div class="theme-panel-title">appearance</div>
+  <div class="theme-grid">
+    <button class="theme-swatch active" data-theme="blue">
+      <span class="sw-preview">
+        <span style="background:#06080f"></span>
+        <span style="background:#3b82f6"></span>
+      </span>
+      <span class="sw-label">Blue</span>
+    </button>
+    <button class="theme-swatch" data-theme="black-white">
+      <span class="sw-preview">
+        <span style="background:#090909"></span>
+        <span style="background:#e2e2e2"></span>
+      </span>
+      <span class="sw-label">White</span>
+    </button>
+    <button class="theme-swatch" data-theme="black-red">
+      <span class="sw-preview">
+        <span style="background:#090607"></span>
+        <span style="background:#ef4444"></span>
+      </span>
+      <span class="sw-label">Red</span>
+    </button>
+    <button class="theme-swatch" data-theme="black-pink">
+      <span class="sw-preview">
+        <span style="background:#090609"></span>
+        <span style="background:#e879a8"></span>
+      </span>
+      <span class="sw-label">Pink</span>
+    </button>
+    <button class="theme-swatch" data-theme="orbs">
+      <span class="sw-preview">
+        <span style="background:#040712"></span>
+        <span style="background:#b066f5"></span>
+      </span>
+      <span class="sw-label">Orbs</span>
+    </button>
+  </div>
+  <div class="theme-warn">white themes are bright btw</div>
+  <div class="theme-grid">
+    <button class="theme-swatch" data-theme="white-red">
+      <span class="sw-preview">
+        <span style="background:#fafafa"></span>
+        <span style="background:#dc2626"></span>
+      </span>
+      <span class="sw-label">W / Red</span>
+    </button>
+    <button class="theme-swatch" data-theme="white-pink">
+      <span class="sw-preview">
+        <span style="background:#fdf7fc"></span>
+        <span style="background:#db2777"></span>
+      </span>
+      <span class="sw-label">W / Pink</span>
+    </button>
+  </div>
+</div>
+
+<!-- ── Reconnect Banner ──────────────────────────────────────────────────────── -->
+<div id="reconnect-banner" class="reconnect-banner">
+  <span class="rb-spinner">&#8635;</span>
+  <span id="rb-text">reconnecting to discord...</span>
+</div>
+
+<!-- ── App ──────────────────────────────────────────────────────────────────── -->
+<div id="app">
+
+  <!-- View: Preparation ──────────────────────────────────────────────────── -->
+  <div class="view active" id="view-prep">
+    <div class="prep-center">
+      <div class="mendax-hero-wrap">
+        <div class="mendax-hero-glow">MENDAX</div>
+        <div class="mendax-hero"><span class="accent">Men</span>dax</div>
+      </div>
+      <div class="prep-sub">quest completer</div>
+      <div class="prep-steps" id="prep-steps"></div>
+      <div id="prep-notice"></div>
+    </div>
+  </div>
+
+  <!-- View: Quest List ───────────────────────────────────────────────────── -->
+  <div class="view" id="view-quests">
+    <div class="view-header">
+      <div class="view-title">Active Quests</div>
+      <div class="view-sub" id="quest-list-sub">select a quest to complete</div>
+    </div>
+
+    <!-- Sort + filter toolbar -->
+    <div class="quest-toolbar" id="quest-toolbar">
+      <select class="sort-select" id="sort-select">
+        <option value="expiry">Expiry (soonest first)</option>
+        <option value="progress-desc">Progress (most done)</option>
+        <option value="progress-asc">Progress (least done)</option>
+        <option value="name">Name A-Z</option>
+      </select>
+      <button class="btn btn-ghost btn-sm filter-toggle" id="btn-filter-orbs" title="Show only orbs quests">orbs</button>
+      <button class="btn btn-ghost btn-sm filter-toggle" id="btn-filter-items" title="Show only cosmetic quests">items</button>
+      <button class="btn btn-ghost btn-sm" id="btn-hide-completed" title="Toggle completed quests">hide done</button>
+    </div>
+
+    <div class="quest-list-body" id="quest-list-body"></div>
+    <div class="quest-list-footer">
+      <button class="btn btn-ghost" id="btn-refresh">&#8635; refresh</button>
+      <div style="flex:1"></div>
+      <button class="btn btn-ghost" id="btn-start-all" disabled title="Queue all enrolled quests and start">start all</button>
+      <button class="btn btn-ghost" id="btn-add-queue" disabled>+ queue</button>
+      <button class="btn btn-primary" id="btn-start-quest" disabled>start</button>
+    </div>
+  </div>
+
+  <!-- View: Progress ─────────────────────────────────────────────────────── -->
+  <div class="view" id="view-progress">
+    <div class="view-header">
+      <div class="view-title">Completing Quest</div>
+      <div class="view-sub" id="prog-header-sub"></div>
+    </div>
+
+    <div class="progress-body">
+      <div class="prog-app-name"   id="prog-app-name"></div>
+      <div class="prog-quest-name" id="prog-quest-name"></div>
+
+      <!-- Circular SVG progress -->
+      <div class="circle-wrap" id="circle-wrap">
+        <svg class="circle-svg" viewBox="0 0 200 200">
+          <defs>
+            <filter id="arc-glow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="blur"/>
+              <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          <circle class="circle-track" cx="100" cy="100" r="85"/>
+          <circle class="circle-fill" id="circle-fill" cx="100" cy="100" r="85" filter="url(#arc-glow)"/>
+        </svg>
+        <div class="circle-center">
+          <div class="circle-pct" id="prog-pct">0%</div>
+          <div class="circle-status-text" id="prog-status">connecting...</div>
+        </div>
+      </div>
+
+      <div class="prog-time-row" id="prog-time-row">
+        <div class="prog-time-item">
+          <div class="label">elapsed</div>
+          <div class="value" id="prog-elapsed">0:00</div>
+        </div>
+        <div class="prog-time-item">
+          <div class="label">remaining</div>
+          <div class="value" id="prog-remaining">--:--</div>
+        </div>
+      </div>
+
+      <div class="prog-discord-note" id="prog-discord-note">discord might say otherwise, but don't worry, it's working... i think...</div>
+    </div>
+
+    <div class="progress-footer">
+      <button class="btn btn-abort" id="btn-abort">abort</button>
+      <button class="btn btn-queue-toggle" id="btn-queue-toggle">
+        queue <span class="queue-count-pill empty" id="queue-count-pill">0</span> &rarr;
+      </button>
+    </div>
+
+    <!-- Queue Side Panel (scoped inside progress view) -->
+    <div class="queue-overlay" id="queue-overlay"></div>
+    <div class="queue-panel" id="queue-panel">
+      <div class="queue-panel-hdr">
+        <span class="queue-panel-title">
+          queue
+          <span class="queue-count-text" id="qp-count">0 / 5</span>
+        </span>
+        <button class="queue-panel-close" id="queue-panel-close">&#8592;</button>
+      </div>
+      <div class="queue-panel-body" id="queue-panel-body"></div>
+    </div>
+  </div>
+
+</div><!-- /#app -->
+
+<!-- ── Stream Quest Modal ──────────────────────────────────────────────────── -->
+<div id="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-title">stream quest</div>
+    <div class="modal-body">
+      <p style="margin-bottom:12px; color:var(--text)">Mendax spoofs your stream activity <strong style="color:var(--text)">no voice channel or actual streaming needed.</strong></p>
+      <p>Click <strong style="color:var(--text)">Start</strong> and the quest will complete on its own. If progress doesn't move after a couple of minutes, join any voice channel in Discord and try again.</p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost"   id="modal-cancel">cancel</button>
+      <button class="btn btn-primary" id="modal-confirm">Start</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Disconnect Overlay ──────────────────────────────────────────────────── -->
+<div id="disconnect-overlay">
+  <div class="disconnect-msg">connection lost</div>
+  <div class="disconnect-sub">discord was closed while a quest was running. closing...</div>
+</div>
+
+<!-- ── Settling Overlay (between queued quests) ────────────────────────────── -->
+<div id="settling-overlay">
+  <div class="settling-content">
+    <div class="settling-title"  id="settling-title">quest complete.</div>
+    <div class="settling-dots"><span></span><span></span><span></span></div>
+    <div class="settling-sub">settling things down...</div>
+    <div class="settling-next"  id="settling-next"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

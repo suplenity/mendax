@@ -1,0 +1,168 @@
+/* ── Theme variables (self-contained, no dependency on style.css) ────────── */
+
+:root,
+[data-theme="blue"] {
+  --n-bg:       #0b0e1a;
+  --n-border:   #1e2538;
+  --n-text:     #eef1fb;
+  --n-sub:      #465070;
+  --n-complete: #22d47a;
+  --n-error:    #f04455;
+  --n-accent:   #3b82f6;
+  --n-shadow:   rgba(0, 0, 0, 0.65);
+}
+
+[data-theme="black-white"] {
+  --n-bg:       #111111;
+  --n-border:   #2a2a2a;
+  --n-text:     #f0f0f0;
+  --n-sub:      #666666;
+  --n-complete: #22d47a;
+  --n-error:    #f04455;
+  --n-accent:   #e2e2e2;
+  --n-shadow:   rgba(0, 0, 0, 0.65);
+}
+
+[data-theme="black-red"] {
+  --n-bg:       #100a0c;
+  --n-border:   #2a181c;
+  --n-text:     #f5eeee;
+  --n-sub:      #604444;
+  --n-complete: #22d47a;
+  --n-error:    #f04455;
+  --n-accent:   #ef4444;
+  --n-shadow:   rgba(0, 0, 0, 0.65);
+}
+
+[data-theme="black-pink"] {
+  --n-bg:       #100a10;
+  --n-border:   #281a30;
+  --n-text:     #f5eef4;
+  --n-sub:      #5e4060;
+  --n-complete: #22d47a;
+  --n-error:    #f04455;
+  --n-accent:   #e879a8;
+  --n-shadow:   rgba(0, 0, 0, 0.65);
+}
+
+[data-theme="white-red"] {
+  --n-bg:       #f2f2f2;
+  --n-border:   #d8d8d8;
+  --n-text:     #111111;
+  --n-sub:      #666666;
+  --n-complete: #16a34a;
+  --n-error:    #dc2626;
+  --n-accent:   #dc2626;
+  --n-shadow:   rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="white-pink"] {
+  --n-bg:       #f5eef4;
+  --n-border:   #d8c4d8;
+  --n-text:     #18080f;
+  --n-sub:      #7a4070;
+  --n-complete: #16a34a;
+  --n-error:    #db2777;
+  --n-accent:   #db2777;
+  --n-shadow:   rgba(0, 0, 0, 0.25);
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────────── */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  background: transparent;
+  overflow: hidden;
+  user-select: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ── Notification card ─────────────────────────────────────────────────────── */
+
+.notif {
+  position: fixed;
+  inset: 0;
+  background: var(--n-bg);
+  border: 1px solid var(--n-border);
+  border-left: 3px solid var(--n-accent);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  box-shadow: -6px 6px 28px var(--n-shadow);
+  animation: slide-in 0.3s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+  overflow: hidden;
+}
+
+.notif.complete { border-left-color: var(--n-complete); }
+.notif.error    { border-left-color: var(--n-error); }
+
+@keyframes slide-in {
+  from { transform: translateX(110%); opacity: 0; }
+  to   { transform: translateX(0);   opacity: 1; }
+}
+
+/* Subtle shimmer line */
+.notif::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+}
+
+/* ── Icon circle ───────────────────────────────────────────────────────────── */
+
+.notif-icon {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--n-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 900;
+  color: #fff;
+  flex-shrink: 0;
+}
+.notif.complete .notif-icon { background: var(--n-complete); }
+.notif.error    .notif-icon { background: var(--n-error); }
+
+/* ── Text ──────────────────────────────────────────────────────────────────── */
+
+.notif-content { flex: 1; min-width: 0; }
+
+.notif-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--n-text);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notif-body {
+  font-size: 11px;
+  color: var(--n-sub);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Close button ──────────────────────────────────────────────────────────── */
+
+.notif-close {
+  font-size: 16px;
+  color: var(--n-sub);
+  flex-shrink: 0;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: color 0.12s;
+}
+.notif-close:hover { color: var(--n-text); }
